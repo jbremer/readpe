@@ -26,6 +26,11 @@ class IMAGE_DOS_HEADER(Structure):
         ('e_lfanew', c_long)
     ]
 
+IMAGE_NE_SIGNATURE = 0x454E
+IMAGE_LE_SIGNATURE = 0x454C
+IMAGE_LX_SIGNATURE = 0x584C
+IMAGE_NT_SIGNATURE = 0x4550
+
 IMAGE_FILE_MACHINE_I386 = 0x014c
 IMAGE_FILE_MACHINE_IA64 = 0x0200
 IMAGE_FILE_MACHINE_AMD64 = 0x8664
@@ -52,6 +57,10 @@ IMAGE_DIRECTORY_ENTRY_EXPORT     = 0
 IMAGE_DIRECTORY_ENTRY_IMPORT     = 1
 IMAGE_DIRECTORY_ENTRY_BASERELOC  = 5
 IMAGE_DIRECTORY_ENTRY_TLS        = 9
+
+IMAGE_NT_OPTIONAL_HDR32_MAGIC = 0x10b
+IMAGE_NT_OPTIONAL_HDR64_MAGIC = 0x20b
+IMAGE_ROM_OPTIONAL_HDR_MAGIC = 0x107
 
 class IMAGE_OPTIONAL_HEADER(Structure):
     _fields_ = [
@@ -89,11 +98,44 @@ class IMAGE_OPTIONAL_HEADER(Structure):
             IMAGE_DATA_DIRECTORY * IMAGE_NUMBEROF_DIRECTORY_ENTRIES),
     ]
 
+class IMAGE_OPTIONAL_HEADER64(Structure):
+    _fields_ = [
+        ('Magic', c_ushort),
+        ('MajorLinkerVersion', c_ubyte),
+        ('MinorLinkerVersion', c_ubyte),
+        ('SizeOfCode', c_uint),
+        ('SizeOfInitializedData', c_uint),
+        ('SizeOfUninitializedData', c_uint),
+        ('AddressOfEntryPoint', c_uint),
+        ('BaseOfCode', c_uint),
+        ('ImageBase', c_ulonglong),
+        ('SectionAlignment', c_uint),
+        ('FileAlignment', c_uint),
+        ('MajorOperatingSystemVersion', c_ushort),
+        ('MinorOperatingSystemVersion', c_ushort),
+        ('MajorImageVersion', c_ushort),
+        ('MinorImageVersion', c_ushort),
+        ('MajorSubsystemVersion', c_ushort),
+        ('MinorSubsystemVersion', c_ushort),
+        ('Win32VersionValue', c_uint),
+        ('SizeOfImage', c_uint),
+        ('SizeOfHeaders', c_uint),
+        ('CheckSum', c_uint),
+        ('Subsystem', c_ushort),
+        ('DllCharacteristics', c_ushort),
+        ('SizeOfStackReserve', c_ulonglong),
+        ('SizeOfStackCommit', c_ulonglong),
+        ('SizeOfHeapReserve', c_ulonglong),
+        ('SizeOfHeapCommit', c_ulonglong),
+        ('LoaderFlags', c_uint),
+        ('NumberOfRvaAndSizes', c_uint),
+        ('DataDirectory',
+            IMAGE_DATA_DIRECTORY * IMAGE_NUMBEROF_DIRECTORY_ENTRIES),
+    ]
+
 class IMAGE_NT_HEADERS(Structure):
     _fields_ = [
         ('Signature', c_uint),
-        ('FileHeader', IMAGE_FILE_HEADER),
-        ('OptionalHeader', IMAGE_OPTIONAL_HEADER)
     ]
 
 IMAGE_SIZEOF_SHORT_NAME = 8
